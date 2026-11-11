@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Notas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 760px;
+        }
+        h2 { text-align: center; color: #333; }
+        .abas { display: flex; gap: 6px; margin-bottom: 20px; }
+        .abas button {
+            margin-top: 0;
+            background: #e9ecef;
+            color: #333;
+        }
+        .abas button:hover { background: #dde1e5; }
+        .abas button.ativo { background: #28a745; color: white; }
+        .painel { display: none; }
+        .painel.ativo { display: block; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #218838; }
+        button:disabled { background-color: #aaa; cursor: not-allowed; }
+        .aviso { color: #a33; font-size: 14px; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #e9ecef; margin-bottom: 5px; padding: 10px; border-radius: 4px; }
+        .tabela-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 6px; text-align: left; border-bottom: 1px solid #eee; }
+        td input { width: 64px; }
+        td button { width: auto; padding: 6px 10px; font-size: 14px; margin-top: 0; white-space: nowrap; }
+        .estado-aprovado { color: #1e7e34; font-weight: bold; }
+        .estado-recuperacao { color: #b8860b; font-weight: bold; }
+        .estado-reprovado { color: #c82333; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Sistema de Notas</h2>
+
+    <div class="abas">
+        <button id="aba-turmas" class="ativo" onclick="Interface.mostrarAba('turmas')">Turmas</button>
+        <button id="aba-alunos" onclick="Interface.mostrarAba('alunos')">Cadastrar aluno</button>
+        <button id="aba-lista" onclick="Interface.mostrarAba('lista')">Alunos</button>
+    </div>
+
+    <!-- Turmas -->
+    <div id="painel-turmas" class="painel ativo">
+        <div class="form-group">
+            <label for="turma-professor">Professor:</label>
+            <input type="text" id="turma-professor" placeholder="Nome do professor">
+        </div>
+        <div class="form-group">
+            <label for="turma-curso">Nome do curso:</label>
+            <input type="text" id="turma-curso" placeholder="Ex.: Matemática">
+        </div>
+        <button onclick="Interface.cadastrarTurma()">Cadastrar turma</button>
+
+        <h3>Turmas cadastradas</h3>
+        <ul id="lista-turmas"></ul>
+    </div>
+
+    <!-- Cadastro de aluno -->
+    <div id="painel-alunos" class="painel">
+        <p id="aviso-sem-turma" class="aviso">Cadastre uma turma na aba Turmas antes de cadastrar alunos.</p>
+        <div class="form-group">
+            <label for="aluno-turma">Turma:</label>
+            <select id="aluno-turma"></select>
+        </div>
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" placeholder="Digite o nome">
+        </div>
+        <div class="form-group">
+            <label for="nota1">Nota 1:</label>
+            <input type="number" id="nota1" min="0" max="10" step="0.1">
+        </div>
+        <div class="form-group">
+            <label for="nota2">Nota 2:</label>
+            <input type="number" id="nota2" min="0" max="10" step="0.1">
+        </div>
+        <div class="form-group">
+            <label for="nota3">Nota 3:</label>
+            <input type="number" id="nota3" min="0" max="10" step="0.1">
+        </div>
+        <button id="btn-salvar-aluno" onclick="Interface.cadastrarAluno()" disabled>Salvar aluno</button>
+    </div>
+
+    <!-- Exibição e edição -->
+    <div id="painel-lista" class="painel">
+        <div class="form-group">
+            <label for="lista-turma">Turma:</label>
+            <select id="lista-turma" onchange="Interface.listarAlunos()"></select>
+        </div>
+        <div id="lista-alunos" class="tabela-wrap"></div>
+    </div>
+</div>
+
+<!-- A ordem importa: Interface usa Aluno e Turma -->
+<script src="Aluno.js"></script>
+<script src="Turma.js"></script>
+<script src="Interface.js"></script>
+</body>
+</html>
